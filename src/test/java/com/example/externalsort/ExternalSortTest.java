@@ -57,7 +57,7 @@ public class ExternalSortTest {
             }
         }
         long time = System.currentTimeMillis();
-        ExternalSort.main(testData.getAbsolutePath(), String.valueOf(threadsNumber));
+        com.example.externalsort.ExternalSort.main(testData.getAbsolutePath(), String.valueOf(threadsNumber));
         long taken = System.currentTimeMillis() - time;
         System.out.format("integers: %,12d, threads: %,2d, milliseconds: %,6d%n", intsNumber, threadsNumber, taken);
         Assert.assertEquals(getMD5(testData), getMD5(expected));
