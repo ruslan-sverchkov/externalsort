@@ -1,6 +1,6 @@
 package com.example.externalsort;
 
-import com.example.externalsort.aggregator.BufferAggregator;
+import com.example.externalsort.aggregator.MyBufferAggregator;
 import org.apache.commons.lang.Validate;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -12,14 +12,14 @@ import java.util.concurrent.RecursiveAction;
  * @author Ruslan Sverchkov
  */
 @NotThreadSafe
-public class SortTask extends RecursiveAction {
+public class MySortTask extends RecursiveAction {
 
-    private final BufferAggregator aggregator;
+    private final MyBufferAggregator aggregator;
     private final long firstIndex;
     private final long lastIndex;
 
     /**
-     * Constructs a SortTask instance.
+     * Constructs a MySortTask instance.
      *
      * @param aggregator the aggregator to sort
      * @param firstIndex first index of sub-sequence to sort
@@ -31,7 +31,7 @@ public class SortTask extends RecursiveAction {
      *                                  * aggregator is read-only
      *                                  * first index is negative
      */
-    public SortTask(BufferAggregator aggregator, long firstIndex, long lastIndex) {
+    public MySortTask(MyBufferAggregator aggregator, long firstIndex, long lastIndex) {
         Validate.notNull(aggregator);
         Validate.isTrue(!aggregator.isReadOnly());
         Validate.isTrue(firstIndex >= 0);
@@ -65,8 +65,8 @@ public class SortTask extends RecursiveAction {
                 j--;
             }
         }
-        SortTask left = new SortTask(aggregator, firstIndex, j);
-        SortTask right = new SortTask(aggregator, i, lastIndex);
+        MySortTask left = new MySortTask(aggregator, firstIndex, j);
+        MySortTask right = new MySortTask(aggregator, i, lastIndex);
         invokeAll(left, right);
     }
 

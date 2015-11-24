@@ -8,16 +8,16 @@ import java.nio.ByteBuffer;
 /**
  * The class is intended to hold information about the location of data in the aggregator.
  * The only reason for it to exist is that I need to return two values from
- * {@link BufferAggregator#getDataLocation(long)} method.
+ * {@link MyBufferAggregator#getDataLocation(long)} method.
  */
 @Immutable
-public class DataLocation {
+public class MyDataLocation {
 
     private final ByteBuffer buffer;
     private final int index;
 
     /**
-     * Constructs a DataLocation instance.
+     * Constructs a MyDataLocation instance.
      *
      * @param buffer a buffer
      * @param index  an index in the buffer
@@ -26,10 +26,10 @@ public class DataLocation {
      *                                  * index is negative
      *                                  * index is out of bounds of the buffer
      */
-    public DataLocation(ByteBuffer buffer, int index) {
+    public MyDataLocation(ByteBuffer buffer, int index) {
         Validate.notNull(buffer);
         Validate.isTrue(index >= 0);
-        Validate.isTrue(index < buffer.limit() / BufferAggregator.INT_SIZE_IN_BYTES);
+        Validate.isTrue(index < buffer.limit() / MyBufferAggregator.INT_SIZE_IN_BYTES);
         this.buffer = buffer;
         this.index = index;
     }

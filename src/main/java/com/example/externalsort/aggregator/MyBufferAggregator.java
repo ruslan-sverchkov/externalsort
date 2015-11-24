@@ -22,14 +22,14 @@ import java.util.List;
  * anywhere else, otherwise the behavior of the class is unpredictable.
  * <p/>
  * The buffers are served in the order they are located in the list, for example if there are two 8-bytes buffers in the
- * list, the length of the BufferAggregator instance will be 4 (it contains 4 integers). If client tries to access data
+ * list, the length of the MyBufferAggregator instance will be 4 (it contains 4 integers). If client tries to access data
  * with index 1, he gets the last four bytes of the first buffer; If client tries to access data with index 2, he gets
  * the first four bytes of the second buffer.
  *
  * @author Ruslan Sverchkov
  */
 @ThreadSafe
-public class BufferAggregator<T extends ByteBuffer> {
+public class MyBufferAggregator<T extends ByteBuffer> {
 
     public static final int INT_SIZE_IN_BYTES = Integer.SIZE / Byte.SIZE;
 
@@ -38,7 +38,7 @@ public class BufferAggregator<T extends ByteBuffer> {
     private final boolean readOnly;
 
     /**
-     * Constructs a BufferAggregator instance.
+     * Constructs a MyBufferAggregator instance.
      *
      * @param buffers the buffers to operate on
      * @throws IllegalArgumentException if:
@@ -47,7 +47,7 @@ public class BufferAggregator<T extends ByteBuffer> {
      *                                  * one of the buffers position is not 0
      *                                  * one of the buffers limit is not a multiple of {@code Integer.SIZE / Byte.SIZE}
      */
-    public BufferAggregator(List<? extends T> buffers) {
+    public MyBufferAggregator(List<? extends T> buffers) {
         Validate.noNullElements(buffers);
         Validate.notEmpty(buffers);
         long tempLength = 0;
@@ -95,7 +95,7 @@ public class BufferAggregator<T extends ByteBuffer> {
      *                                   changed from the outside
      */
     public int getInt(final long index) {
-        DataLocation location = getDataLocation(index);
+        MyDataLocation location = getDataLocation(index);
         ByteBuffer buffer = location.getBuffer();
         int indexInBuffer = location.getIndex();
         return buffer.getInt(indexInBuffer * INT_SIZE_IN_BYTES);
@@ -114,7 +114,7 @@ public class BufferAggregator<T extends ByteBuffer> {
      *                                   if this aggregator is read-only
      */
     public void setInt(long index, int value) {
-        DataLocation location = getDataLocation(index);
+        MyDataLocation location = getDataLocation(index);
         ByteBuffer buffer = location.getBuffer();
         int indexInBuffer = location.getIndex();
         buffer.putInt(indexInBuffer * INT_SIZE_IN_BYTES, value);
@@ -131,7 +131,7 @@ public class BufferAggregator<T extends ByteBuffer> {
      *                                   if the source code itself is incorrect or if the underlying buffers has been
      *                                   changed from the outside
      */
-    protected DataLocation getDataLocation(long index) {
+    protected MyDataLocation getDataLocation(long index) {
         if (index >= length) {
             throw new IndexOutOfBoundsException("index is " + index + " and length is " + length);
         }
@@ -141,7 +141,7 @@ public class BufferAggregator<T extends ByteBuffer> {
             int intsInBuffer = buffer.limit() / INT_SIZE_IN_BYTES;
             if (tempIndex < intsInBuffer) {
                 int indexInBuffer = (int) (tempIndex);
-                return new DataLocation(buffer, indexInBuffer); // todo get rid of this for performance's sake
+                return new MyDataLocation(buffer, indexInBuffer); // todo get rid of this for performance's sake
             }
             length += intsInBuffer;
         }

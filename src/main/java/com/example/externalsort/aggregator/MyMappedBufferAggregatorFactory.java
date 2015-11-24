@@ -12,39 +12,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The class is intended to construct a {@link MappedBufferAggregator instance} using the specified file.
+ * The class is intended to construct a {@link MyMappedBufferAggregator instance} using the specified file.
  *
  * @author Ruslan Sverchkov
  */
 @ThreadSafe
-public class MappedBufferAggregatorFactory {
+public class MyMappedBufferAggregatorFactory {
 
     private final int maxBytesToMap;
 
     /**
-     * Constructs a MappedBufferAggregatorFactory instance.
+     * Constructs a MyMappedBufferAggregatorFactory instance.
      *
      * @param maxBytesToMap max number of bytes mapped by one mapped byte buffer
      * @throws IllegalArgumentException if:
      *                                  * maxBytesToMap is not positive
-     *                                  * maxBytesToMap is not a multiple of {@link BufferAggregator#INT_SIZE_IN_BYTES}
+     *                                  * maxBytesToMap is not a multiple of {@link MyBufferAggregator#INT_SIZE_IN_BYTES}
      */
-    public MappedBufferAggregatorFactory(int maxBytesToMap) {
+    public MyMappedBufferAggregatorFactory(int maxBytesToMap) {
         Validate.isTrue(maxBytesToMap > 0);
-        Validate.isTrue(maxBytesToMap % BufferAggregator.INT_SIZE_IN_BYTES == 0);
+        Validate.isTrue(maxBytesToMap % MyBufferAggregator.INT_SIZE_IN_BYTES == 0);
         this.maxBytesToMap = maxBytesToMap;
     }
 
     /**
-     * The method is intended to construct a {@link MappedBufferAggregator instance} using the specified file.
+     * The method is intended to construct a {@link MyMappedBufferAggregator instance} using the specified file.
      *
-     * @param file a file to construct a {@link MappedBufferAggregator instance} for
-     * @return a {@link MappedBufferAggregator instance} constructed using the specified file, never returns null
+     * @param file a file to construct a {@link MyMappedBufferAggregator instance} for
+     * @return a {@link MyMappedBufferAggregator instance} constructed using the specified file, never returns null
      * @throws IOException if the given file object does not denote an existing, writable regular file and
      *                     a new regular file of that name cannot be created, or if some other error occurs
      *                     while opening or creating the file
      */
-    public MappedBufferAggregator get(File file) throws IOException {
+    public MyMappedBufferAggregator get(File file) throws IOException {
         Validate.notNull(file);
         Validate.isTrue(file.length() % 4 == 0);
         List<MappedByteBuffer> buffers = new ArrayList<>();
@@ -55,7 +55,7 @@ public class MappedBufferAggregatorFactory {
         if (tail != 0) {
             buffers.add(getMappedByteBuffer(file, file.length() - tail, tail));
         }
-        return new MappedBufferAggregator(buffers);
+        return new MyMappedBufferAggregator(buffers);
     }
 
     /**

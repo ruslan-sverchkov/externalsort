@@ -1,8 +1,8 @@
 package com.example.externalsort;
 
-import com.example.externalsort.aggregator.BufferAggregator;
-import com.example.externalsort.aggregator.MappedBufferAggregator;
-import com.example.externalsort.aggregator.MappedBufferAggregatorFactory;
+import com.example.externalsort.aggregator.MyBufferAggregator;
+import com.example.externalsort.aggregator.MyMappedBufferAggregator;
+import com.example.externalsort.aggregator.MyMappedBufferAggregatorFactory;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringUtils;
 
@@ -23,7 +23,7 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class ExternalSort {
 
-    private static final int MAX_BYTES_TO_MAP = Integer.MAX_VALUE - Integer.MAX_VALUE % BufferAggregator.INT_SIZE_IN_BYTES;
+    private static final int MAX_BYTES_TO_MAP = Integer.MAX_VALUE - Integer.MAX_VALUE % MyBufferAggregator.INT_SIZE_IN_BYTES;
     private static final String WELCOME = "Program usage: java -jar external_sort.jar <file path> <threads number>";
 
     /**
@@ -50,9 +50,9 @@ public class ExternalSort {
             return;
         }
         SynchronousExecutor executor = new SynchronousExecutor(new ForkJoinPool(threadsNumber.getObject()));
-        MappedBufferAggregatorFactory factory = new MappedBufferAggregatorFactory(MAX_BYTES_TO_MAP);
-        MappedBufferAggregator aggregator = factory.get(file.getObject());
-        executor.execute(new SortTask(aggregator, 0, aggregator.getLength() - 1));
+        MyMappedBufferAggregatorFactory factory = new MyMappedBufferAggregatorFactory(MAX_BYTES_TO_MAP);
+        MyMappedBufferAggregator aggregator = factory.get(file.getObject());
+        executor.execute(new MySortTask(aggregator, 0, aggregator.getLength() - 1));
         aggregator.force();
     }
 
@@ -61,7 +61,7 @@ public class ExternalSort {
      * Validation rules:
      * * file exists
      * * file length is positive
-     * * file length is a multiple of {@link BufferAggregator#INT_SIZE_IN_BYTES}
+     * * file length is a multiple of {@link MyBufferAggregator#INT_SIZE_IN_BYTES}
      *
      * @param filePath a file path
      * @return a file construction result, never returns null
@@ -74,9 +74,9 @@ public class ExternalSort {
         if (file.length() == 0) {
             return new ConstructionResult<>(ImmutableList.of("File is empty or does not exist"));
         }
-        if (file.length() % BufferAggregator.INT_SIZE_IN_BYTES != 0) {
+        if (file.length() % MyBufferAggregator.INT_SIZE_IN_BYTES != 0) {
             return new ConstructionResult<>(ImmutableList.of("File size must be a multiple of "
-                    + BufferAggregator.INT_SIZE_IN_BYTES));
+                    + MyBufferAggregator.INT_SIZE_IN_BYTES));
         }
         return new ConstructionResult<>(file);
     }
