@@ -13,7 +13,7 @@ import java.io.*;
  *
  * @author Ruslan Sverchkov
  */
-public class ExternalSortTest {
+public class MyExternalSortTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
